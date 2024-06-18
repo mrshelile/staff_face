@@ -1,75 +1,147 @@
-
 import 'package:flutter/material.dart';
 
-// import 'package:media_kit/media_kit.dart'; // Provides [Player], [Media], [Playlist] etc.
-// import 'package:media_kit_video/media_kit_video.dart';
-
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
-  // late final player = Player();
-  // // Create a [VideoController] to
-  // late final controller = VideoController(player);
+  int _presentCount = 0;
+  int _absentCount = 0;
+
+  final List<Employee> employees = [
+    Employee(
+        name: 'John Doe',
+        attendance: 'Present',
+        entryTime: '09:00 AM',
+        exitTime: '05:00 PM'),
+    Employee(
+        name: 'Jane Smith', attendance: 'Absent', entryTime: '', exitTime: ''),
+    Employee(
+        name: 'Alice Johnson',
+        attendance: 'Present',
+        entryTime: '09:30 AM',
+        exitTime: '05:30 PM'),
+    // Add more employees as needed
+  ];
 
   @override
   void initState() {
     super.initState();
-    // Play a [Media] or [Pla *  History restored list].
-    // player.open(Media(
-    //     'https://user-images.githubusercontent.com/28951144/229373695-22f88f13-d18f-4288-9bf1-c3e078d83722.mp4'));
+    _calculateAttendanceAnalysis();
+  }
+
+  void _calculateAttendanceAnalysis() {
+    _presentCount =
+        employees.where((employee) => employee.attendance == 'Present').length;
+    _absentCount =
+        employees.where((employee) => employee.attendance == 'Absent').length;
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).copyWith().size;
     return Container(
-      margin: EdgeInsets.only(
-          left: size.width * 0.01,
-          right: 10,
-          top: size.height * 0.17,
-          bottom: 20),
-      child: ListView(
-        // mainAxisAlignment: MainAxisAlignment.start,
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        // mainAxisSize: MainAxisSize.max,
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 20),
+          Text(
+            'Attendance Analysis',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildAnalysisCard('Total Present', _presentCount.toString()),
+              _buildAnalysisCard('Total Absent', _absentCount.toString()),
+              _buildAnalysisCard(
+                  'Total Employees', employees.length.toString()),
+            ],
+          ),
+          SizedBox(height: 30),
+          Text(
+            'Employee Attendance',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 20),
           Container(
-            width: size.width * 1,
-            // height: size.height * 0.45,
-            child: Wrap(
-              direction: Axis.horizontal,
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                
-                SizedBox(
-                  width: size.width * 0.05,
-                ),
-                Container(
-                  width: size.width * 0.212,
-                  height: size.height * 0.45,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color.fromARGB(255, 209, 209, 209),
-                            spreadRadius: 0.01,
-                            blurRadius: 0.7,
-                            offset: Offset(6, 6))
-                      ],
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Text(""),
-                ),
-              ],
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10.0),
             ),
-          )
+            child: DataTable(
+              headingRowColor:
+                  MaterialStateColor.resolveWith((states) => Colors.blue),
+              columns: [
+                DataColumn(
+                    label: Text('Employee',
+                        style: TextStyle(color: Colors.white))),
+                DataColumn(
+                    label: Text('Attendance',
+                        style: TextStyle(color: Colors.white))),
+                DataColumn(
+                    label: Text('Entry Time',
+                        style: TextStyle(color: Colors.white))),
+                DataColumn(
+                    label: Text('Exit Time',
+                        style: TextStyle(color: Colors.white))),
+              ],
+              rows: employees.map((employee) {
+                return DataRow(cells: [
+                  DataCell(Text(employee.name)),
+                  DataCell(Text(employee.attendance)),
+                  DataCell(Text(employee.entryTime)),
+                  DataCell(Text(employee.exitTime)),
+                ]);
+              }).toList(),
+            ),
+          ),
         ],
       ),
     );
   }
+
+  Widget _buildAnalysisCard(String title, String value) {
+    return Card(
+      color: Colors.lightBlue,
+      child: Padding(
+        padding: EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+            SizedBox(height: 5),
+            Text(
+              value,
+              style: TextStyle(fontSize: 16, color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Employee {
+  final String name;
+  final String attendance;
+  final String entryTime;
+  final String exitTime;
+
+  Employee(
+      {required this.name,
+      required this.attendance,
+      required this.entryTime,
+      required this.exitTime});
 }

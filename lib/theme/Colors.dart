@@ -14,7 +14,7 @@ final color3 = Color.fromARGB(255, 51, 175, 186);
 final color4 = Color.fromARGB(255, 76, 84, 28);
 final color5 = Color.fromARGB(255, 39, 35, 89);
 final color6 = Color.fromARGB(251, 198, 242, 209);
-final color7 = Color.fromARGB(255, 138, 228, 240);
+final color7 = Color.fromARGB(255, 12, 85, 128);
 final colorPallate = [
   Color(0xFF1984c5),
   Color(0xFF22a7f0),
